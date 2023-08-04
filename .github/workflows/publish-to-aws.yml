@@ -1,0 +1,35 @@
+name: Publish Lambda Function
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install Python
+        run: python3 -m venv venv
+        shell: bash
+
+      - name: Activate virtual environment
+        run: . venv/bin/activate
+        shell: bash
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Build Lambda function
+        run: python3 -m build
+
+      - name: Upload Lambda function to AWS
+        run: aws lambda publish-function --function-name my-function --zip-file fileb://./my_function.zip
+
+      - name: Test Lambda function
+        run: aws lambda invoke --function-name my-function --payload '{"test": "data"}' --output text --query 'Payload'
+
+    if: success()
