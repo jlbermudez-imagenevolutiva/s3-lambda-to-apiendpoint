@@ -18,22 +18,22 @@ def lambda_handler(event, context):
   # Get the object key from the event object.
   object_key = event['Records'][0]['s3']['object']['key']
 
-  # Get the current time.
-  now = datetime.now()
-
   # Get the file size from the event object.
   file_size = event['Records'][0]['s3']['object']['size']
 
   # Get the file hash from the event object.
   file_hash = event['Records'][0]['s3']['object']['eTag']
 
+  # Get the current time.
+  now = datetime.now()
+
   # Create a JSON object containing the bucket name, object key, time, file size, and file hash.
   data = {
     'bucket_name': bucket_name,
     'object_key': object_key,
-    'time': now.isoformat(),
     'file_size': file_size,
-    'file_hash': file_hash
+    'file_hash': file_hash,
+    'time': now.isoformat()
   }
 
   # Send the message to the HTTPS endpoint.
