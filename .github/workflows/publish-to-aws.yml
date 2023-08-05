@@ -30,6 +30,6 @@ jobs:
         run: aws lambda publish-function --function-name my-function --zip-file fileb://./my_function.zip
 
       - name: Test Lambda function
-        run: aws lambda invoke --function-name my-function --payload '{"test": "data"}' --output text --query 'Payload'
+        run: aws lambda invoke --function-name my-function --payload '{\"test\": \"data\"}' --output text --query 'Payload'
 
     if: success()
