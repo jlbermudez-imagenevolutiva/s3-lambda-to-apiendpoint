@@ -1,8 +1,12 @@
 import boto3
+import datetime
 import json
 import os
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 def lambda_handler(event, context):
+  print('Loading function')
   """This function sends a message to an HTTPS endpoint when a file is created in an S3 bucket.
 
   Args:
@@ -26,7 +30,7 @@ def lambda_handler(event, context):
   file_hash = event['Records'][0]['s3']['object']['eTag']
 
   # Get the current time.
-  now = datetime.now()
+  #now = datetime.now()
 
   endpoint = os.environ['URL_ENDPOINT']
 
@@ -35,11 +39,16 @@ def lambda_handler(event, context):
     'bucket_name': bucket_name,
     'object_key': object_key,
     'file_size': file_size,
-    'file_hash': file_hash,
-    'time': now.isoformat()
+    'file_hash': file_hash
+  #  'time': now.isoformat()
   }
 
   # Send the message to the HTTPS endpoint.
-  requests.post(endpoint, data=json.dumps(data))
+  print('Sending message')
+  print(data)
+  try:
+    req = Request(endpoint, urlencode(data).encode())
+  except urllib.error.URLError as e:
+    print("La solicitud falló:", e.reason)
 
   return None
