@@ -1,5 +1,6 @@
 import boto3
 import json
+import os
 
 def lambda_handler(event, context):
   """This function sends a message to an HTTPS endpoint when a file is created in an S3 bucket.
@@ -26,6 +27,8 @@ def lambda_handler(event, context):
 
   # Get the current time.
   now = datetime.now()
+
+  endpoint = os.environ['URL_ENDPOINT']
 
   # Create a JSON object containing the bucket name, object key, time, file size, and file hash.
   data = {
